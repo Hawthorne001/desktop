@@ -4,8 +4,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+@namespace html 'http://www.w3.org/1999/xhtml';
+
 :root {
-  --zen-settings-secondary-background: light-dark(#F2F4F4, color-mix(in srgb, var(--zen-primary-color) 10%, black 90%));
+  --zen-settings-secondary-background: light-dark(#f2f4f4, color-mix(in srgb, var(--zen-colors-tertiary) 50%, #0f0f0f 50%));
+  --in-content-box-background: var(--zen-colors-tertiary) !important;
 }
 
 .main-content {
@@ -21,34 +24,72 @@ description {
   margin-top: 0 !important;
 }
 
+@keyframes dialogPopin {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+html|dialog {
+  animation: dialogPopin 0.2s ease-out;
+}
+
 groupbox {
-  background: light-dark(white, color-mix(in srgb, var(--zen-primary-color) 10%, #1b1b1b 90%));
+  background: light-dark(white, color-mix(in srgb, var(--zen-primary-color) 2%, #1b1b1b 98%));
   padding-inline: unset !important;
   padding: 20px 30px !important;
   margin-bottom: 0 !important;
   position: relative;
+
+  /* add shadow just to the sides */
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+@media (-moz-bool-pref: 'zen.theme.color-prefs.amoled') {
+  groupbox {
+    background: #141414;
+  }
+}
+
+@media (-moz-bool-pref: 'zen.theme.color-prefs.colorful') {
+  groupbox {
+    background: light-dark(white, color-mix(in srgb, var(--zen-primary-color) 10%, #1b1b1b 90%));
+  }
+
+  :root {
+    --zen-settings-secondary-background: light-dark(#f2f4f4, color-mix(in srgb, var(--zen-colors-tertiary) 70%, #0f0f0f 30%));
+  }
 }
 
 .subcategory + groupbox,
 #noFxaAccount,
 #hasFxaAccount {
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   margin-top: 5px;
 }
 
 groupbox:has(+ script),
 groupbox:last-of-type,
+groupbox#pane-experimental-featureGates,
 groupbox:has(+ .subcategory) {
-  border-bottom-left-radius: 10px !important;
-  border-bottom-right-radius: 10px !important;
+  border-bottom-left-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+  /* add shadow just to bottom */
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.1);
 }
 
-.sticky-inner-container{
+.sticky-inner-container {
   display: none !important;
 }
 
-.subcategory  {
+.subcategory {
   border-top: none !important;
 }
 
@@ -59,7 +100,6 @@ groupbox:has(+ .subcategory) {
 
 groupbox button {
   border-radius: 5px !important;
-  padding: 5px 10px !important;
 }
 
 groupbox button,
@@ -69,7 +109,7 @@ groupbox menulist {
 }
 
 groupbox h2 {
-  opacity: .7;
+  opacity: 0.7;
   font-size: 15px;
 }
 
@@ -82,11 +122,10 @@ groupbox h2 {
   min-height: 40px !important;
   position: relative;
   padding-inline: 20px !important;
-
 }
 
 #categories > .category[selected]::before {
-  content: "";
+  content: '';
   display: block;
   height: 70%;
   width: 5px;
@@ -97,7 +136,7 @@ groupbox h2 {
 }
 
 #languagesGroup::before {
-  content: "";
+  content: '';
   display: block;
   height: 1px;
   background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
@@ -136,6 +175,29 @@ groupbox h2 {
 
 /* Look and feel */
 
+#webAppearanceSettings,
+#zen-theme-builder-wrapper + box {
+  margin-bottom: 15px;
+}
+
+#zen-dark-theme-styles-form,
+#zen-compact-mode-styles-form {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-large);
+  margin-top: 5px;
+
+  & .web-appearance-choice-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px 0;
+
+    background: color-mix(in srgb, var(--zen-colors-tertiary) 50%, transparent 50%);
+  }
+}
+
 #zen-expand-tabbar-strat {
   display: flex;
   flex-direction: column;
@@ -146,7 +208,7 @@ groupbox h2 {
 }
 
 #category-zen-looks > .category-icon {
-  list-style-image: url("chrome://browser/skin/customize.svg");
+  list-style-image: url('chrome://browser/skin/customize.svg');
 }
 
 #zenLooksAndFeelColorOptions {
@@ -170,8 +232,45 @@ groupbox h2 {
   border: 2px solid transparent;
 }
 
-.zenLooksAndFeelColorOptionParen[selected="true"] {
+.zenLooksAndFeelColorOptionParen[selected='true'] {
   border-color: var(--zen-primary-color);
+}
+
+.zen-compact-mode-styles-browser-wrapper {
+  width: 55%;
+  height: 60px;
+  display: flex;
+  border-radius: 10px;
+  border: 1px solid var(--zen-colors-border);
+  background: var(--zen-colors-tertiary);
+  position: relative;
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
+
+  padding: 7px;
+
+  &[left] div {
+    width: 100%;
+    background: var(--zen-primary-color);
+    border-radius: 5px;
+    height: 18px;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  &[top] div {
+    width: 18px;
+    background: var(--zen-primary-color);
+    border-radius: 5px;
+    height: 100%;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  &[both] div {
+    width: 100%;
+    height: 100%;
+    background: var(--zen-colors-secondary);
+    border-radius: 5px;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
+  }
 }
 
 .zenLooksAndFeelColorOption {
@@ -184,7 +283,7 @@ groupbox h2 {
 }
 
 .zenLooksAndFeelColorOption::before {
-  content: "";
+  content: '';
   display: block;
   width: 50%;
   height: 50%;
@@ -195,7 +294,7 @@ groupbox h2 {
 }
 
 .zenLooksAndFeelColorOption::after {
-  content: "";
+  content: '';
   display: block;
   width: 50%;
   height: 50%;
@@ -207,14 +306,23 @@ groupbox h2 {
 
 /* Workspace */
 
-#category-zen-workspaces > .category-icon {
-  list-style-image: url("chrome://browser/skin/window.svg");
+#category-zen-tabs-management > .category-icon {
+  list-style-image: url('chrome://browser/skin/window.svg');
+}
+
+#zenTabsUnloadDelayContainer {
+  display: flex;
+  align-items: center;
+
+  & #zenTabsUnloadDelay {
+    margin-left: auto;
+  }
 }
 
 /* CKS */
 
 #category-zen-CKS > .category-icon {
-  list-style-image: url("chrome://browser/skin/quickactions.svg");
+  list-style-image: url('chrome://browser/skin/quickactions.svg');
 }
 
 .zenCKSOption-input {
@@ -229,17 +337,29 @@ groupbox h2 {
   user-select: none;
   cursor: text;
   background: transparent;
+  transition: border-color 0.1s;
 }
 
 .zenCKSOption {
   margin-bottom: 10px;
   display: flex;
   align-items: center;
+
+  & > vbox {
+    width: fit-content;
+    justify-content: end;
+    min-width: 70%;
+
+    & > label {
+      margin-left: auto;
+    }
+  }
 }
 
 .zenCKSOption > label {
   font-size: 14px;
   color: light-dark(rgba(0, 0, 0, 0.7), rgba(255, 255, 255, 0.7));
+  width: 100%;
 }
 
 .zenCKSOption-input.zenCKSOption-input-not-set {
@@ -251,13 +371,35 @@ groupbox h2 {
   box-shadow: 0 0 0 2px var(--zen-primary-color);
 }
 
+.zenCKSOption-conflict {
+  color: red;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
+.zenCKSOption-unsafed {
+  color: yellow;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
 .zenCKSOption-input.zenCKSOption-input-invalid {
   border-color: red;
 }
 
-#zenCKSOptions-wrapper > [data-group]:not(:first-of-type) {
-  border-top: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
-  padding-top: 10px;
+.zenCKSOption-input.zenCKSOption-input-unsafed {
+  border-color: yellow;
+}
+
+.zenCKSOption-input.zenCKSOption-input-valid {
+  border-color: green;
+}
+
+#zenCKSOption-wrapper > [data-group] {
+  border-bottom: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+  padding-top: 20px;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 /* Theme builder */
@@ -311,19 +453,49 @@ groupbox h2 {
   transform: translate(-50%, -50%);
 }
 
-
 /* THemes marketplace */
 
-.zenThemeMarketplaceItem {
-  width: 100%;
+#category-zen-marketplace > .category-icon {
+  list-style-image: url('chrome://mozapps/skin/extensions/category-themes.svg');
+}
 
-  &:not(:first-of-type), .zenThemeMarketplaceItemPreferences {
-    margin-top: 15px;
+.zenThemeMarketplaceItem {
+  border: 1px solid var(--zen-colors-border);
+  border-radius: 5px;
+  padding: var(--space-medium);
+  position: relative;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.zenThemeMarketplaceItemConfigureButton {
+  width: 30px;
+  min-width: 0;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 15px;
+    height: 15px;
+    background-image: url('chrome://global/skin/icons/settings.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 }
 
 .zenThemeMarketplaceItemPreferenceCheckbox {
   margin-right: 10px;
+}
+
+.zenThemeMarketplaceItemPreference:first-of-type {
+  margin-top: 10px;
 }
 
 .zenThemeMarketplaceItemPreference:not(:last-of-type) {
@@ -334,12 +506,75 @@ groupbox h2 {
   margin: 0;
 }
 
+.zenThemeMarketplaceItemContent {
+  max-width: 100%;
+  width: 100%;
+}
+
+.zenThemeMarketplaceItemTitle,
+.zenThemeMarketplaceItemDescription {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.zenThemeMarketplaceItemActions {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-top: var(--space-small);
+  justify-content: space-between;
+}
+
+#zenThemeMarketplaceList {
+  display: grid;
+  gap: var(--space-medium);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
 #zenThemeMarketplaceList:has(> *) {
   margin: 15px 0;
 }
 
 .zenThemeMarketplaceItemUninstallButton {
   margin-left: auto;
+}
+
+#zenThemeMarketplaceCheckForUpdates {
+  margin-left: auto;
+}
+
+.zenThemeMarketplaceItemPreferenceDialog {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  min-width: 650px;
+}
+
+.zenThemeMarketplaceItemPreferenceDialogTopBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.zenThemeMarketplaceItemPreferenceDialogContent {
+  display: flex;
+  flex-direction: row;
+}
+
+.zenThemeMarketplaceItemPreferenceToggle {
+  align-self: start;
+}
+
+#zenThemeMarketplaceItemContentHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  & moz-toggle {
+    margin-left: 10px;
+  }
 }
 
 /* Disable mozilla's settings */
@@ -349,4 +584,9 @@ groupbox h2 {
 #websiteAdvertisingCategory,
 #websiteAdvertisingGroup {
   display: none !important;
+}
+
+.sync-engine-workspaces .checkbox-icon,
+.sync-engine-workspaces.sync-engine-image {
+  list-style-image: url("chrome://devtools/skin/images/tool-storage.svg");
 }

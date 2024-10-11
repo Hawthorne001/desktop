@@ -13,7 +13,7 @@
 /****************************************************************************
  * Betterfox                                                                *
  * "Ad meliora"                                                             *
- * version: 128                                                             *
+ * version: 130                                                             *
  * url: https://github.com/yokoffing/Betterfox                              *
 ****************************************************************************/
 
@@ -21,20 +21,21 @@
  * SECTION: FASTFOX                                                         *
 ****************************************************************************/
 /** GENERAL ***/
-pref("content.notify.interval", 100000); // (.10s); alt=500000 (.50s)
+//pref("content.notify.interval", 100000); // (.10s); alt=500000 (.50s)
 
 /** GFX ***/
-pref("gfx.canvas.accelerated.cache-items", 4096);
-pref("gfx.canvas.accelerated.cache-size", 512);
-pref("gfx.content.skia-font-cache-size", 20);
+pref("gfx.canvas.accelerated.cache-items", 32768);
+pref("gfx.canvas.accelerated.cache-size", 4096);
+pref("gfx.content.skia-font-cache-size", 80);
 
 /** DISK CACHE ***/
 pref("browser.cache.jsbc_compression_level", 3);
 
 /** MEDIA CACHE ***/
-pref("media.memory_cache_max_size", 512000); // alt=512000; also in Securefox (inactive there)
-pref("media.cache_readahead_limit", 9000); // default=60; stop reading ahead when our buffered data is this many seconds ahead of the current playback
-pref("media.cache_resume_threshold", 6000); // default=30; when a network connection is suspended, don't resume it until the amount of buffered data falls below this threshold (in seconds)
+pref("media.memory_cache_max_size", 1048576);
+pref("media.cache_readahead_limit", 9000);
+pref("media.cache_resume_threshold", 3600);
+pref("media.memory_caches_combined_limit_kb", 2560000);
 
 /** IMAGE CACHE ***/
 pref("image.mem.decode_bytes_at_a_time", 32768);
@@ -81,7 +82,6 @@ pref("security.tls.enable_0rtt_data", false);
 
 /** DISK AVOIDANCE ***/
 pref("browser.privatebrowsing.forceMediaMemoryCache", true);
-pref("browser.sessionstore.interval", 60000);
 
 /** SHUTDOWN & SANITIZING ***/
 pref("privacy.history.custom", true);
@@ -102,10 +102,6 @@ pref("network.IDN_show_punycode", true);
 
 /** CONTAINERS ***/
 pref("privacy.userContext.ui.enabled", true);
-
-/** WEBRTC ***/
-pref("media.peerconnection.ice.proxy_only_if_behind_proxy", true);
-pref("media.peerconnection.ice.default_address_only", true);
 
 /** SAFE BROWSING ***/
 pref("browser.safebrowsing.downloads.remote.enabled", false);

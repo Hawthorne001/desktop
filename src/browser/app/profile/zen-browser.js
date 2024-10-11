@@ -13,8 +13,14 @@ pref("browser.tabs.hoverPreview.enabled", true);
 pref("browser.tabs.cardPreview.delayMs", 100);
 
 #ifdef MOZ_UPDATE_CHANNEL
-pref("devtools.debugger.prompt-connection", false);
+pref("devtools.debugger.prompt-connection", true);
 #endif
+
+// Dont download the multilingual dictionary
+pref("intl.multilingual.downloadEnabled", false);
+
+// Restore session on startup
+pref("browser.startup.page", 3);
 
 // Theme
 pref('toolkit.legacyUserProfileCustomizations.stylesheets', true);
@@ -23,6 +29,9 @@ pref('browser.compactmode.show', true);
 pref('browser.newtabpage.activity-stream.newtabWallpapers.enabled', true);
 pref('browser.newtabpage.activity-stream.newtabWallpapers.v2.enabled', true);
 pref('browser.translations.newSettingsUI.enable', true);
+
+pref('privacy.userContext.enabled', true);
+pref('privacy.userContext.ui.enabled', true);
 
 pref("browser.urlbar.trimHttps", true);
 pref("browser.urlbar.untrimOnUserInteraction.featureGate", true);
@@ -45,10 +54,12 @@ pref('pdfjs.enableHighlightEditor', true);
 pref('pdfjs.enableHighlightFloatingButton', true);
 
 pref("alerts.showFavicons", true);
+
+pref("browser.tabs.loadBookmarksInTabs", false);
 pref('browser.toolbars.bookmarks.visibility', 'never');
 
 // Enable Do Not Track and GPC by default.
-pref("privacy.donottrackheader.enabled", true);
+pref("privacy.donottrackheader.enabled", false);
 pref("privacy.globalprivacycontrol.enabled", true);
 // Disable more telemetry
 pref("toolkit.telemetry.enabled", false);
@@ -56,8 +67,7 @@ pref("browser.ping-centre.telemetry", false);
 pref("browser.attribution.enabled", false);
 pref("toolkit.telemetry.pioneer-new-studies-available", false);
 
-pref("browser.contentblocking.category", "standard");
-pref("app.update.checkInstallTime.days", 2);
+pref("app.update.checkInstallTime.days", 6);
 
 // CUSTOM ZEN PREFS
 
@@ -66,24 +76,44 @@ pref('zen.welcomeScreen.seen', false);
 pref('zen.tabs.vertical', true);
 pref('zen.tabs.vertical.right-side', false);
 pref('zen.theme.accent-color', "#aac7ff");
-pref('zen.theme.border-radius', 10); // In pixels
+pref('zen.theme.border-radius', 5); // In pixels
+pref('zen.theme.content-element-separation', 6); // In pixels
 pref('zen.theme.toolbar-themed', true);
 pref('zen.theme.pill-button', false);
 pref('zen.view.compact', false);
-pref('zen.view.compact.hide-toolbar', false);
 
+pref('zen.theme.color-prefs.amoled', false);
+pref('zen.theme.color-prefs.colorful', false);
+
+pref('zen.view.compact.hide-tabbar', true);
+pref('zen.view.compact.hide-toolbar', false);
+pref('zen.view.compact.toolbar-flash-popup', true);
+pref('zen.view.compact.toolbar-flash-popup.duration', 800);
+pref('zen.view.compact.toolbar-hide-after-hover.duration', 1000);
+
+pref('zen.view.sidebar-height-throttle', 200); // in ms
 pref('zen.view.sidebar-expanded', false);
 pref('zen.view.sidebar-expanded.on-hover', false);
 pref('zen.view.sidebar-expanded.show-button', true);
 pref('zen.view.sidebar-expanded.max-width', 400);
 
+pref('zen.view.show-bottom-border', false);
 pref('zen.view.sidebar-collapsed.hide-mute-button', true);
 
-pref('zen.keyboard.shortcuts.enabled', true);
-pref('zen.keyboard.shortcuts', ""); // Empty string means default shortcuts
-pref('zen.keyboard.shortcuts.disable-firefox', false);
 pref('zen.tabs.dim-pending', true);
+pref('zen.tabs.newtab-on-middle-click', true);
+
+pref('zen.keyboard.shortcuts.enabled', true);
+pref('zen.keyboard.shortcuts.version', 0); // Empty string means default shortcuts
+
 pref('zen.themes.updated-value-observer', false);
+
+pref('zen.tab-unloader.enabled', true);
+pref('zen.tab-unloader.timeout-minutes', 20);
+pref('zen.tab-unloader.excluded-urls', "example.com,example.org");
+
+pref('zen.pinned-tab-manager.restore-pinned-tabs-to-pinned-url', false);
+pref('zen.pinned-tab-manager.close-shortcut-behavior', 'switch');
 
 // Pref to enable the new profiles (TODO: Check this out!)
 //pref("browser.profiles.enabled", true);
@@ -95,9 +125,18 @@ pref('zen.sidebar.close-on-blur', true);
 
 // Zen Split View
 pref('zen.splitView.working', false);
+pref('zen.splitView.min-resize-width', 7);
+pref('zen.splitView.change-on-hover', false);
+pref('zen.splitView.rearrange-hover-size', 24);
 
 // Zen Workspaces
 pref('zen.workspaces.enabled', true);
+pref('zen.workspaces.hide-default-container-indicator', true);
+pref('zen.workspaces.individual-pinned-tabs', true);
+pref('zen.workspaces.show-icon-strip', true);
+pref('zen.workspaces.icons', '["🌐", "📁", "💼", "📝", "📅", "📊","🧠"]');
+pref('services.sync.prefs.sync.zen.workspaces.icons', true);
+pref('services.sync.engine.workspaces', false);
 
 // Zen Watermark
 pref('zen.watermark.enabled', true, sticky);
@@ -108,14 +147,9 @@ pref('general.smoothScroll', true); // DEFAULT
 
 // Privacy
 pref('dom.private-attribution.submission.enabled', false);
+pref('dom.security.https_only_mode', true);
 
 pref('media.eme.enabled', true);
-pref('webgl.disabled', false);
-
-pref("app.update.url.manual", "https://www.zen-browser.app/download");
-pref("app.update.url.details", "hhttps://www.zen-browser.app/download");
-pref("app.releaseNotesURL", "https://www.zen-browser.app/release-notes");
-pref("app.releaseNotesURL.aboutDialog", "https://www.zen-browser.app/release-notes");
 
 // Enable importers for other browsers
 pref('browser.migrate.vivaldi.enabled', true);
@@ -131,17 +165,25 @@ pref('xpinstall.signatures.required', false);
 // Experimental Zen Features
 // Strategy to use for bytecode cache (Thanks https://github.com/gunir)
 pref('dom.script_loader.bytecode_cache.strategy', 2);
+pref("dom.text_fragments.enabled", true);
 
-// Extremly experimental features
-pref("dom.webgpu.enabled", true);
+// Enable private suggestions
+pref('browser.search.suggest.enabled', true);
+pref('browser.search.suggest.enabled.private', true);
 
-// Font rendering, not for MacOSX and Linux
-#ifndef XP_UNIX
-#ifndef XP_MACOSX
-pref('gfx.font_rendering.cleartype_params.rendering_mode', 5);
-pref('gfx.font_rendering.cleartype_params.gamma', 1750);
+pref("extensions.enabledScopes", 5); // [HIDDEN PREF]
+
+// Enable JXL support
+pref('image.jxl.enabled', true);
+
+#if defined(XP_WIN)
+  pref("dom.ipc.processPriorityManager.backgroundUsesEcoQoS", false);
 #endif
-#endif
+
+pref('browser.sessionstore.restore_pinned_tabs_on_demand', true);
+
+// Enable experimental settings page (Usef for Zen Labs)
+pref('browser.preferences.experimental', true);
 
 #include better-fox.js
 
@@ -159,7 +201,7 @@ pref("network.http.speculative-parallel-limit", 10);
 pref("network.http.rcwn.enabled", false);
 
 // Enable Browser Toolbox, Ctrl+Shift+Alt+I for debugging and modifying UI
-pref("devtools.debugger.remote-enabled", true);
+pref("devtools.debugger.remote-enabled", false);
 pref("devtools.chrome.enabled", true);
 
 // Disable firefox's revamp
@@ -169,3 +211,21 @@ pref("sidebar.verticalTabs", false, locked);
 // Better Windows theming
 pref("widget.non-native-theme.scrollbar.style", 2);
 pref("widget.non-native-theme.use-theme-accent", true);
+
+// Expose Letterboxing https://github.com/zen-browser/desktop/issues/475
+pref("privacy.resistFingerprinting.letterboxing", false);
+pref("privacy.resistFingerprinting.letterboxing.dimensions", "");
+
+// Remove Inspect Accessibity Properties menu
+pref("devtools.accessibility.enabled", false);
+
+// Enable GPU by default
+pref('gfx.webrender.all', true);
+pref('media.ffmpeg.vaapi.enabled', true);
+pref('media.ffmpeg.encoder.enabled', true);
+
+pref("media.hardware-video-decoding.enabled", true);
+pref("gfx.canvas.accelerated", true);
+
+// Fix buffering issues: Youtube, Archive bugzilla.mozilla.org/show_bug.cgi?id=1854077
+pref("network.fetchpriority.enabled", true);

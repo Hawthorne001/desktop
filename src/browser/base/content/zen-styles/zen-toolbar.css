@@ -1,8 +1,8 @@
-
-#nav-bar {
+#nav-bar,
+#zen-sidebar-top-buttons {
   background: transparent;
 }
 
-:root[inDOMFullscreen="true"] #zen-appcontent-navbar-container {
+:root[inDOMFullscreen='true'] #zen-appcontent-navbar-container {
   display: none;
 }

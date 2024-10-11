@@ -1,33 +1,126 @@
-
 #zen-workspaces-button {
-  border: 1px solid var(--zen-colors-border);
-  border-radius: 50px;
-  height: calc(var(--zen-sidebar-action-button-width) - 10px) !important;
-  margin-bottom: .1rem !important;
   justify-content: center;
   align-items: center;
   display: flex;
+
+  position: relative;
+
+  &:not([as-button='true']) {
+    --toolbarbutton-hover-background: transparent !important;
+    border-radius: var(--zen-button-border-radius) !important;
+    background: transparent;
+    padding: 5px;
+    appearance: unset !important;
+    height: fit-content;
+    gap: 3px;
+
+    & toolbarbutton {
+      margin: 0 !important;
+      width: 25px;
+      display: flex;
+      justify-content: center;
+      padding: 0 !important;
+      align-items: center;
+      position: relative;
+
+      & > * {
+        opacity: 0.6;
+      }
+
+      &:not([active='true']) {
+        &::after {
+          content: '';
+          position: absolute;
+          width: 4px;
+          border-radius: 99px;
+          height: 4px;
+          background: color-mix(in srgb, var(--zen-primary-color) 10%, light-dark(#000, #fff) 90%);
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        & .zen-workspace-icon {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &[as-button='true'] {
+    border-radius: var(--tab-border-radius);
+
+    &:hover {
+      background: var(--toolbarbutton-hover-background);
+    }
+  }
+
+  :root:has(#navigator-toolbox:not([zen-expanded='true'])) &[as-button='true'] {
+    margin: 0 !important;
+    padding: var(--toolbarbutton-inner-padding) !important;
+    width: calc(2 * var(--toolbarbutton-inner-padding) + 16px) !important;
+    height: calc(2 * var(--toolbarbutton-inner-padding) + 16px) !important;
+    border-radius: var(--tab-border-radius) !important;
+
+    &:hover {
+      background: var(--toolbarbutton-hover-background) !important;
+    }
+  }
+}
+
+#zen-workspaces-button .zen-workspace-sidebar-wrapper {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
 }
 
 #zen-workspaces-button .zen-workspace-sidebar-name {
-  margin-left: .1rem;
+  margin-left: 0.2rem;
   display: none;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-size: 13px;
 }
 
-@media (-moz-bool-pref: "zen.view.sidebar-expanded") {
-  #navigator-toolbox:is([zen-user-hover="true"]:hover, :not([zen-user-hover="true"])) {
+@media (-moz-bool-pref: 'zen.view.sidebar-expanded') {
+  /** Keep these selectors in sync with the ones in vertical-tabs.css */
+  #navigator-toolbox:is(
+      #navigator-toolbox[zen-user-hover='true'][zen-has-hover],
+      #navigator-toolbox[zen-user-hover='true'][has-popup-menu],
+      #navigator-toolbox[zen-user-hover='true']:focus-within,
+      #mainPopupSet[zen-user-hover='true']:has(> #appMenu-popup:hover) ~ toolbox,
+      #navigator-toolbox[zen-user-hover='true']:has(*[open='true']:not(tab):not(#zen-sidepanel-button)),
+      :not([zen-user-hover='true'])
+    ) {
+    & #zen-workspaces-button[as-button='true'] {
+      width: 100% !important;
+      margin: 2px;
+      min-width: calc(2 * var(--toolbarbutton-inner-padding) + 16px);
+      height: calc(2 * var(--toolbarbutton-inner-padding) + 16px);
+
+      & .zen-workspace-sidebar-wrapper {
+        left: calc(var(--toolbarbutton-outer-padding) + 5px);
+        width: calc(100% - (var(--toolbarbutton-outer-padding) * 3));
+      }
+    }
+
     & #zen-workspaces-button .zen-workspace-sidebar-name {
       display: block;
     }
 
-    & #zen-workspaces-button .zen-workspace-sidebar-icon[no-icon="true"] {
-      display: none;
+    & #zen-workspaces-button .zen-workspace-sidebar-icon {
+      margin-inline-end: 5px;
+
+      & [no-icon='true'] {
+        display: none;
+      }
     }
 
-    & #zen-workspaces-button .zen-workspace-sidebar-icon[no-icon="true"] + .zen-workspace-sidebar-name {
+    & #zen-workspaces-button .zen-workspace-sidebar-icon[no-icon='true'] + .zen-workspace-sidebar-name {
       margin-left: 0;
     }
 
@@ -36,8 +129,7 @@
       white-space: nowrap;
       text-overflow: ellipsis;
       display: flex;
-      padding: 2px 10px;
-      width: calc(100% - var(--zen-tabbrowser-padding) * 8) !important;
+      gap: 0.5ch;
     }
   }
 }
@@ -51,6 +143,8 @@
 
 #PanelUI-zen-workspaces > panelmultiview {
   align-items: flex-start;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 #PanelUI-zen-workspaces panelmultiview panelview {
@@ -60,11 +154,13 @@
   min-height: 150px;
 }
 
-#PanelUI-zen-workspaces-create-input {
+#PanelUI-zen-workspaces-create-input,
+#PanelUI-zen-workspaces-edit-input {
   margin-top: 10px;
 }
 
-#PanelUI-zen-workspaces-create-icons-container toolbarbutton {
+#PanelUI-zen-workspaces-create-icons-container toolbarbutton,
+#PanelUI-zen-workspaces-edit-icons-container toolbarbutton {
   width: 30px;
   height: 30px;
   display: flex;
@@ -74,30 +170,40 @@
   border-radius: 7px;
 }
 
-#PanelUI-zen-workspaces-create-icons-container toolbarbutton[selected="true"] {
+#PanelUI-zen-workspaces-create-icons-container toolbarbutton[selected='true'],
+#PanelUI-zen-workspaces-edit-icons-container toolbarbutton[selected='true'] {
   border-color: var(--zen-colors-secondary);
 }
 
-#PanelUI-zen-workspaces-create-icons-container toolbarbutton .toolbarbutton-icon {
+#PanelUI-zen-workspaces-create-icons-container toolbarbutton .toolbarbutton-icon,
+#PanelUI-zen-workspaces-edit-icons-container toolbarbutton .toolbarbutton-icon {
   display: none;
 }
 
-#PanelUI-zen-workspaces-create-icons-container toolbarbutton .toolbarbutton-text {
+#PanelUI-zen-workspaces-create-icons-container toolbarbutton .toolbarbutton-text,
+#PanelUI-zen-workspaces-edit-icons-container toolbarbutton .toolbarbutton-text {
   min-width: unset;
 }
 
-#PanelUI-zen-workspaces-create-icons-container {
+#PanelUI-zen-workspaces-create-icons-container,
+#PanelUI-zen-workspaces-edit-icons-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
   gap: 8px;
 }
 
+#PanelUI-zen-workspaces-create-icons-container toolbarbutton.toolbarbutton-1,
+#PanelUI-zen-workspaces-edit-icons-container toolbarbutton.toolbarbutton-1 {
+  margin-top: 10px;
+}
+
 #PanelUI-zen-workspaces-list {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 }
 
-#PanelUI-zen-workspaces-list[empty="true"] {
+#PanelUI-zen-workspaces-list[empty='true'] {
   font-weight: 600;
   padding: 10px;
   width: 100%;
@@ -110,9 +216,9 @@
 }
 
 #PanelUI-zen-workspaces-list toolbarbutton,
-#PanelUI-zen-workspaces-current-info toolbarbutton  {
+#PanelUI-zen-workspaces-current-info toolbarbutton {
   padding: 5px;
-  border-radius: 7px;
+  border-radius: var(--zen-button-border-radius);
 
   margin-left: 0 !important;
   margin-right: 0 !important;
@@ -127,13 +233,18 @@
   & .zen-workspace-icon {
     width: 30px;
     height: 30px;
-    border-radius: 7px;
+    border-radius: var(--zen-button-border-radius);
     margin-right: 10px;
     border: 1px solid var(--zen-colors-border);
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  &[data-usercontextid] .zen-workspace-icon {
+    border-color: color-mix(in srgb, var(--identity-tab-color) 40%, transparent 60%);
   }
 
   & .zen-workspace-name {
@@ -143,6 +254,12 @@
     text-overflow: ellipsis;
   }
 
+  & .zen-workspace-container {
+    font-size: 12px;
+    opacity: 0.5;
+    font-weight: normal;
+  }
+
   & .zen-workspace-actions {
     display: none;
     margin: 0;
@@ -150,7 +267,7 @@
   }
 
   &:hover .zen-workspace-actions,
-  & .zen-workspace-actions[active="true"] {
+  & .zen-workspace-actions[active='true'] {
     display: flex;
   }
 }
@@ -160,7 +277,7 @@
   margin-top: 5px;
 }
 
-#PanelUI-zen-workspaces-view vbox:nth-child(2) {
+#PanelUI-zen-workspaces-view > vbox:nth-child(2) {
   margin-top: 10px;
 }
 
@@ -173,14 +290,16 @@
   height: 20px;
 }
 
-#PanelUI-zen-workspaces-create-footer {
+#PanelUI-zen-workspaces-create-footer,
+#PanelUI-zen-workspaces-edit-footer {
   padding-bottom: 0 !important;
-  margin-top: 20px;
+  margin-top: 10px;
   margin-left: 0;
   margin-bottom: 0 !important;
   width: 100%;
 }
 
-#PanelUI-zen-workspaces-create-footer button[default="true"] {
+#PanelUI-zen-workspaces-create-footer button[default='true'],
+#PanelUI-zen-workspaces-edit-footer button[default='true'] {
   width: 100%;
 }
